@@ -1,5 +1,6 @@
 import React from 'react';
 import { Todo } from '../types';
+import { ListGroup, Button, Form } from 'react-bootstrap';
 
 interface Props {
   todo: Todo;
@@ -9,15 +10,20 @@ interface Props {
 
 const TodoItem: React.FC<Props> = ({ todo, toggleComplete, deleteTodo }) => {
   return (
-    <div>
-      <input
+    <ListGroup.Item className="d-flex justify-content-between align-items-center">
+      <Form.Check
         type="checkbox"
         checked={todo.completed}
         onChange={() => toggleComplete(todo.id)}
+        label={todo.text}
       />
-      {todo.text}
-      <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-    </div>
+      <Button
+        variant="danger"
+        onClick={() => deleteTodo(todo.id)}
+      >
+        Delete
+      </Button>
+    </ListGroup.Item>
   );
 };
 

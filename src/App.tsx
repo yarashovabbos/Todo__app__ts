@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
 import { Todo } from './types';
+import { Container, Row, Col, Alert } from 'react-bootstrap';
 import { fetchTodos, createTodo, updateTodo, deleteTodo } from './api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const getTodos = async () => {
@@ -15,17 +17,17 @@ const App: React.FC = () => {
         const response = await fetchTodos();
         setTodos(response.data);
       } catch (error) {
-        toast.error('Failed to fetch todos');
+        setError('Failed to fetch todos');
       }
     };
 
     getTodos();
   }, []);
 
-  const addTodo = async (todo: Todo) => {
+  const addTodo = async (todo: { text: string; completed: boolean }) => {
     try {
-      await createTodo(todo);
-      setTodos([...todos, todo]);
+      const response = await createTodo(todo);
+      setTodos([...todos, { id: response.data.id, ...todo }]);
       toast.success('Todo added');
     } catch (error) {
       toast.error('Failed to add todo');
@@ -56,12 +58,17 @@ const App: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Todo App</h1>
-      <TodoForm addTodo={addTodo} />
-      <TodoList todos={todos} toggleComplete={toggleComplete} deleteTodo={removeTodo} />
+    <Container className="mt-5">
+      <Row className="justify-content-center">
+        <Col md={6}>
+          <h1 className="text-center mb-4">Todo App</h1>
+          {error && <Alert variant="danger">{error}</Alert>}
+          <TodoForm addTodo={addTodo} />
+          <TodoList todos={todos} toggleComplete={toggleComplete} deleteTodo={removeTodo} />
+        </Col>
+      </Row>
       <ToastContainer />
-    </div>
+    </Container>
   );
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import TodoItem from './TodoItem';
 import { Todo } from '../types';
+import { ListGroup } from 'react-bootstrap';
 
 interface Props {
   todos: Todo[];
@@ -10,7 +11,7 @@ interface Props {
 
 const TodoList: React.FC<Props> = ({ todos, toggleComplete, deleteTodo }) => {
   return (
-    <div>
+    <ListGroup>
       {todos.map(todo => (
         <TodoItem
           key={todo.id}
@@ -19,7 +20,7 @@ const TodoList: React.FC<Props> = ({ todos, toggleComplete, deleteTodo }) => {
           deleteTodo={deleteTodo}
         />
       ))}
-    </div>
+    </ListGroup>
   );
 };
 
